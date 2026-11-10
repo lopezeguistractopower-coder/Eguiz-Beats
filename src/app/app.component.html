@@ -1,0 +1,361 @@
+<header class="site-header">
+  <a class="brand" href="#inicio" aria-label="Eguiz Beats, inicio">
+    <span class="brand__logo-shell"><img class="brand__logo" src="/images/eguiz-logo.png" alt="" fetchpriority="high"></span>
+    <span class="brand__name">EGUIZ<span>BEATS</span></span>
+  </a>
+
+  <nav class="main-nav" aria-label="Navegación principal">
+    <a href="#beats">Beats</a>
+    <a href="#perfil">Perfil</a>
+    <a href="#licencias">Licencias</a>
+    <a href="#artistas">Artistas</a>
+  </nav>
+
+  <button class="cart-button" type="button" (click)="openCart()" [attr.aria-label]="'Abrir carrito, ' + cartCount() + ' productos'">
+    <i class="fa-solid fa-bag-shopping" aria-hidden="true"></i>
+    <span>Carrito</span>
+    <span class="cart-button__count">{{ cartCount() }}</span>
+  </button>
+</header>
+
+<main>
+  <section class="hero section-wrap" id="inicio">
+    <div class="studio-backdrop" role="img" aria-label="Eguiz trabajando en su estudio musical">
+      <img src="/images/eguiz-studio.jpg" alt="" fetchpriority="high">
+      <div class="studio-backdrop__wash" aria-hidden="true"></div>
+      <div class="studio-backdrop__caption" aria-hidden="true">
+        <span class="studio-backdrop__dot"></span>
+        EGUIZ · EN EL ESTUDIO
+      </div>
+    </div>
+    <div class="hero__copy">
+      <p class="eyebrow"><span class="status-dot"></span> PRODUCTOR MUSICAL INDEPENDIENTE</p>
+      <h1>Ritmo propio.<br><span>Sonido sin límites.</span></h1>
+      <p class="hero__intro">
+        Soy <strong>Eguiz</strong>, productor musical con más de <strong>5 años de experiencia</strong>
+        creando beats con identidad para reggaetón, trap, R&amp;B y mucho más.
+      </p>
+      <div class="genre-list" aria-label="Géneros musicales">
+        <span>Reggaetón</span><span>Trap</span><span>R&amp;B</span><span>Afrobeat</span><span>Dancehall</span><span>Synthwave</span>
+      </div>
+      <a class="button button--primary" href="#beats">
+        Explorar beats <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+      </a>
+    </div>
+
+    <div class="hero__portrait-wrap" id="perfil">
+      <div class="portrait-glow" aria-hidden="true"></div>
+      <div class="hero__portrait">
+        <img src="/images/eguiz-profile.jpg" alt="Retrato de Eguiz, productor musical" fetchpriority="high">
+        <div class="portrait-caption">
+          <div class="portrait-caption__brand">
+            <img class="portrait-caption__logo" src="/images/eguiz-logo.png" alt="">
+            <span class="portrait-caption__label">EN EL ESTUDIO</span>
+          </div>
+          <strong>Prod. by Eguiz</strong>
+          <span>Creando el próximo sonido.</span>
+        </div>
+      </div>
+      <div class="portrait-badge"><i class="fa-solid fa-bolt" aria-hidden="true"></i> 5+ años creando</div>
+      <span class="led led--one" aria-hidden="true"></span>
+      <span class="led led--two" aria-hidden="true"></span>
+    </div>
+
+    <div class="hero__footnote"><span>01</span> PRODUCCIÓN · IDENTIDAD · MOVIMIENTO</div>
+  </section>
+
+  <section class="license-tiers section-wrap" id="licencias">
+    <div class="license-tiers__heading">
+      <p class="eyebrow">ELIGE LA OPCIÓN QUE VA CON TU PROYECTO</p>
+      <h2>Planes de <span>licencia</span></h2>
+      <p>Opciones para cada etapa de tu próximo lanzamiento.</p>
+    </div>
+
+    <div class="license-grid">
+      @for (plan of licensePlans; track plan.id) {
+        <article class="license-card" [class.license-card--featured]="plan.featured">
+          @if (plan.featured) {
+            <span class="license-card__badge"><i class="fa-solid fa-star" aria-hidden="true"></i> MÁS POPULAR</span>
+          }
+          <div class="license-card__body">
+            <h3>{{ plan.title }}</h3>
+            <p class="license-card__price">
+              @if (plan.price !== null) {
+                {{ formatPrice(plan.price) }}
+              } @else {
+                <span class="license-card__offer">Hablemos</span>
+              }
+            </p>
+            <p class="license-card__label">{{ plan.label }}</p>
+            <ul class="license-card__features">
+              @for (feature of plan.features; track feature) {
+                <li>{{ feature }}</li>
+              }
+            </ul>
+          </div>
+          <button
+            class="license-card__button"
+            [class.license-card__button--featured]="plan.featured"
+            type="button"
+            (click)="selectLicense(plan)"
+          >{{ plan.price === null ? 'Consultar' : 'Elegir licencia' }}</button>
+        </article>
+      }
+    </div>
+    <p class="license-tiers__note">Confirma con Eguiz los límites y derechos de uso de cada licencia antes de pagar. La licencia exclusiva requiere una cotización personalizada.</p>
+  </section>
+
+  <section class="artists-section section-wrap" id="artistas" aria-labelledby="artists-heading">
+    <div class="artists-section__heading">
+      <p class="eyebrow">COLABORACIONES QUE INSPIRAN</p>
+      <h2 id="artists-heading">Artistas con los que <span>he trabajado</span></h2>
+      <p>Sonidos y talentos de distintos lugares, unidos por la música.</p>
+    </div>
+
+    <div
+      class="artist-carousel"
+      role="region"
+      aria-roledescription="carrusel"
+      aria-label="Artistas colaboradores"
+      tabindex="0"
+      (keydown)="onCarouselKeydown($event)"
+    >
+      <button
+        class="artist-carousel__arrow artist-carousel__arrow--previous"
+        type="button"
+        aria-label="Ver artista anterior"
+        (click)="moveCarousel(-1)"
+      ><i class="fa-solid fa-chevron-left" aria-hidden="true"></i></button>
+
+      <div class="artist-carousel__stage" aria-live="polite">
+        @for (artist of collaborators; track artist.name; let index = $index) {
+          <article
+            class="artist-card"
+            [class]="artistPositionClass(index)"
+            [attr.aria-current]="collaboratorIndex() === index ? 'true' : null"
+            [attr.aria-label]="(index + 1) + ' de ' + collaborators.length + ': ' + artist.name + ', ' + artist.country"
+            aria-roledescription="diapositiva"
+          >
+            <img class="artist-card__photo" [src]="artist.image" [alt]="artist.name + ', ' + artist.country" [loading]="index < 2 ? 'eager' : 'lazy'">
+            <div class="artist-card__overlay" aria-hidden="true"></div>
+            <div class="artist-card__topline">
+              <span class="artist-card__brand">
+                <span class="artist-card__logo"><img src="/images/eguiz-logo.png" alt=""></span>
+                <span><strong>EGUIZ BEATS</strong><small>Artista colaborador</small></span>
+              </span>
+              <span class="artist-card__number">{{ (index + 1).toString().padStart(2, '0') }} <span>/ {{ collaborators.length.toString().padStart(2, '0') }}</span></span>
+            </div>
+            <div class="artist-card__caption">
+              <span class="artist-card__eyebrow">MÚSICA · COLABORACIÓN</span>
+              <h3>{{ artist.name }}</h3>
+              <p><i class="fa-solid fa-location-dot" aria-hidden="true"></i> {{ artist.country }}</p>
+            </div>
+          </article>
+        }
+      </div>
+
+      <button
+        class="artist-carousel__arrow artist-carousel__arrow--next"
+        type="button"
+        aria-label="Ver artista siguiente"
+        (click)="moveCarousel(1)"
+      ><i class="fa-solid fa-chevron-right" aria-hidden="true"></i></button>
+
+      <div class="artist-carousel__indicators" role="group" aria-label="Elegir artista">
+        @for (artist of collaborators; track artist.name; let index = $index) {
+          <button
+            class="artist-carousel__indicator"
+            [class.artist-carousel__indicator--active]="collaboratorIndex() === index"
+            type="button"
+            [attr.aria-label]="'Mostrar a ' + artist.name"
+            [attr.aria-pressed]="collaboratorIndex() === index"
+            (click)="collaboratorIndex.set(index)"
+          ></button>
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="catalog section-wrap" id="beats">
+    <div class="section-heading">
+      <div>
+        <p class="eyebrow">HECHOS PARA DARLE VIDA A TU IDEA</p>
+        <h2>Beats <span>seleccionados</span></h2>
+        <p class="section-heading__description">Escucha los trabajos de Eguiz y encuentra el sonido que va contigo.</p>
+      </div>
+      <span class="catalog-count">{{ beats.length }} producciones</span>
+    </div>
+
+    <div class="genre-filters" aria-label="Filtrar beats por género">
+      @for (genre of genres; track genre) {
+        <button
+          class="filter-chip"
+          [class.filter-chip--active]="activeGenre() === genre"
+          type="button"
+          (click)="setGenre(genre)"
+          [attr.aria-pressed]="activeGenre() === genre"
+        >{{ genre }}</button>
+      }
+    </div>
+
+    <div class="beat-grid">
+      @for (beat of filteredBeats(); track beat.id) {
+        <article class="beat-card">
+          <div
+            class="cover-art"
+            [class]="beat.coverStyle"
+            [style.--color-a]="beat.colors[0]"
+            [style.--color-b]="beat.colors[1]"
+          >
+            <div class="cover-art__pattern" aria-hidden="true"></div>
+            <div class="cover-art__orb" aria-hidden="true"></div>
+            <div class="cover-art__copy">
+              <span>{{ beat.genre }}</span>
+              <strong>{{ beat.title }}</strong>
+              <span>EGUIZBEATS <i aria-hidden="true">·</i> {{ beat.bpm }} BPM</span>
+            </div>
+            <button
+              class="cover-play"
+              type="button"
+              (click)="playBeat(beat)"
+              [attr.aria-label]="'Reproducir ' + beat.title"
+            >
+              <i
+                class="fa-solid"
+                [class.fa-play]="selectedBeat()?.id !== beat.id || !isPlaying()"
+                [class.fa-pause]="selectedBeat()?.id === beat.id && isPlaying()"
+                aria-hidden="true"
+              ></i>
+            </button>
+          </div>
+          <div class="beat-card__info">
+            <div class="beat-card__details">
+              <h3>{{ beat.title }}</h3>
+              <p>{{ beat.genre }} <span>·</span> {{ beat.bpm }} BPM @if (beat.key) { <span>·</span> {{ beat.key }} }</p>
+            </div>
+            <button class="add-button" type="button" (click)="addToCart(beat.title, 34.99)" [attr.aria-label]="'Añadir ' + beat.title + ' al carrito por ' + formatPrice(34.99)">
+              <i class="fa-solid fa-plus" aria-hidden="true"></i><span>{{ formatPrice(34.99) }}</span>
+            </button>
+          </div>
+        </article>
+      }
+    </div>
+  </section>
+
+  @if (selectedBeat(); as beat) {
+    <aside class="audio-player" aria-label="Reproductor de beats">
+      <div class="audio-player__track">
+        <div class="audio-player__art" [class]="beat.coverStyle" [style.--color-a]="beat.colors[0]" [style.--color-b]="beat.colors[1]">
+          <i class="fa-solid fa-wave-square" aria-hidden="true"></i>
+        </div>
+        <div class="audio-player__info">
+          <strong>{{ beat.title }}</strong>
+          <span>{{ beat.genre }} · {{ beat.bpm }} BPM</span>
+        </div>
+      </div>
+      <button class="audio-player__toggle" type="button" (click)="togglePlayback()" [attr.aria-label]="isPlaying() ? 'Pausar' : 'Reproducir'">
+        <i class="fa-solid" [class.fa-pause]="isPlaying()" [class.fa-play]="!isPlaying()" aria-hidden="true"></i>
+      </button>
+      <div class="audio-player__time">
+        <span>{{ formatTime(currentTime()) }}</span>
+        <div class="audio-player__progress"><span [style.width.%]="duration() ? (currentTime() / duration()) * 100 : 0"></span></div>
+        <span>{{ formatTime(duration()) }}</span>
+      </div>
+      @if (playerError()) {
+        <p class="audio-player__error" role="status">{{ playerError() }}</p>
+      }
+    </aside>
+  }
+
+  <section class="license-section section-wrap" id="consulta">
+    <div class="license-section__copy">
+      <p class="eyebrow">TU SIGUIENTE CANCIÓN EMPIEZA AQUÍ</p>
+      <h2>¿Listo para <span>crear?</span></h2>
+      <p>Añade beats o licencias al carrito, revisa el detalle del pedido y continúa a PayPal para pagar.</p>
+    </div>
+    <button class="button button--secondary" type="button" (click)="openCart()">
+      Ver mi carrito <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+    </button>
+    <span class="license-section__note">Los términos de uso de cada licencia deben confirmarse con Eguiz antes del pago. La licencia exclusiva se cotiza por separado.</span>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <a class="brand brand--footer" href="#inicio">
+    <span class="brand__logo-shell"><img class="brand__logo" src="/images/eguiz-logo.png" alt=""></span>
+    <span class="brand__name">EGUIZ<span>BEATS</span></span>
+  </a>
+  <p>Beats con identidad, hechos por Eguiz.</p>
+  <span>© {{ currentYear }} Eguiz Beats</span>
+</footer>
+
+@if (isCartOpen()) {
+  <div class="cart-overlay">
+    <button class="cart-overlay__backdrop" type="button" aria-label="Cerrar carrito" (click)="closeCart()"></button>
+    <section class="cart-panel" role="dialog" aria-modal="true" aria-labelledby="cart-title">
+      <div class="cart-panel__heading">
+        <div>
+          <p class="eyebrow">{{ checkoutStep() === 'details' ? 'TU SELECCIÓN' : 'CONFIRMA TU PEDIDO' }}</p>
+          <h2 id="cart-title">{{ checkoutStep() === 'details' ? 'Carrito' : 'Revisa tu pedido' }}</h2>
+        </div>
+        <button class="icon-button" type="button" aria-label="Cerrar carrito" (click)="closeCart()"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button>
+      </div>
+      @if (cart().length === 0) {
+        <p class="cart-panel__empty">Aún no has añadido ningún beat.</p>
+      } @else {
+        <div class="cart-items">
+          @for (item of cart(); track $index) {
+            <div class="cart-item">
+              <div><strong>{{ item.title }}</strong><span>{{ item.type }}</span></div>
+              <span>{{ formatPrice(item.price) }}</span>
+              <button class="icon-button icon-button--remove" type="button" [attr.aria-label]="'Quitar ' + item.title" (click)="removeFromCart($index)"><i class="fa-solid fa-trash" aria-hidden="true"></i></button>
+            </div>
+          }
+        </div>
+        <div class="cart-total"><span>Total del pedido · USD</span><strong>{{ formatPrice(cartTotal()) }}</strong></div>
+
+        @if (checkoutStep() === 'details') {
+          <form class="checkout-form" (submit)="continueToReview($event)">
+            <p class="checkout-form__intro">Antes de pagar, déjanos tus datos para identificar tu pedido.</p>
+            <label for="checkout-email">Correo electrónico</label>
+            <input id="checkout-email" name="email" type="email" autocomplete="email" maxlength="160" placeholder="tu@correo.com" required>
+            <label for="checkout-phone">Número de teléfono</label>
+            <input id="checkout-phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" maxlength="30" placeholder="+1 555 123 4567" required>
+            <button class="button button--primary cart-panel__request" type="submit">Revisar pedido</button>
+          </form>
+          <p class="cart-panel__note">Tu correo y teléfono se compartirán con PayPal como referencia del pedido. El pago se procesa en PayPal; nunca solicitamos tus credenciales bancarias aquí.</p>
+        } @else {
+          <div class="order-review">
+            <h3>Confirma el servicio que necesitas</h3>
+            <p class="order-review__contact"><strong>Correo:</strong> {{ customerEmail() }}<br><strong>Teléfono:</strong> {{ customerPhone() }}</p>
+            <p class="order-review__total">Total a pagar en PayPal <strong>{{ formatPrice(cartTotal()) }} USD</strong></p>
+          </div>
+          <label class="order-confirm">
+            <input type="checkbox" [checked]="orderConfirmed()" (change)="confirmOrder($event)">
+            <span>Confirmo que estos servicios y el total del pedido son correctos.</span>
+          </label>
+          <form class="paypal-form" action="https://www.paypal.com/cgi-bin/webscr" method="post">
+            <input type="hidden" name="cmd" value="_cart">
+            <input type="hidden" name="upload" value="1">
+            <input type="hidden" name="business" [value]="paypalBusinessEmail">
+            <input type="hidden" name="currency_code" value="USD">
+            <input type="hidden" name="no_shipping" value="1">
+            <input type="hidden" name="custom" [value]="paypalCustomerDetails()">
+            @for (item of cart(); track $index) {
+              <input type="hidden" [name]="'item_name_' + ($index + 1)" [value]="paypalItemName(item)">
+              <input type="hidden" [name]="'amount_' + ($index + 1)" [value]="item.price.toFixed(2)">
+              <input type="hidden" [name]="'quantity_' + ($index + 1)" value="1">
+            }
+            <button class="button button--primary cart-panel__request paypal-button" type="submit" [disabled]="!orderConfirmed()">
+              Continuar a PayPal <i class="fa-brands fa-paypal" aria-hidden="true"></i>
+            </button>
+          </form>
+          <button class="checkout-back" type="button" (click)="checkoutStep.set('details'); orderConfirmed.set(false)">Volver a mis datos</button>
+          <p class="cart-panel__note">El pago se envía a {{ paypalBusinessEmail }}. La confirmación del pago y la entrega de los archivos se gestionan por separado.</p>
+        }
+      }
+    </section>
+  </div>
+}
+
+<div class="toast" [class.toast--visible]="notice()" role="status" aria-live="polite">{{ notice() }}</div>
